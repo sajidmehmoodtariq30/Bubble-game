@@ -10,6 +10,18 @@ body {
     width: 100%;
 }
 
+button{
+    width: 6rem;
+    height: 3rem;
+    background-color: #fff;
+    color: rgb(100, 151, 100);
+    border: none;
+    outline: none;
+    border-radius: 16px;
+    font-size: 25px;
+    cursor: pointer;
+}
+
 main{
     height: 100vh;
     width: 100vw;
@@ -28,11 +40,11 @@ main{
 }
 
 #top{
-    padding: 0 20%;
     width: 100%;
-    height: 100px;
+    height: 15%;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
+    flex-wrap: wrap;
     align-items: center;
     color: #fff;
     background-color: rgb(150, 201, 150);
@@ -56,17 +68,24 @@ main{
 
 #bottom{
     width: 100%;
-    height: calc(100% - 100px);
+    height: 85%;
     padding: 25px 40px;
     display: flex;
+    align-items: center;
+    justify-content: center;
     flex-wrap: wrap;
     gap: 20px;
     overflow: hidden;
 }
 
+#bottom h1{
+    font-size: 40px;
+    color: rgb(100, 151, 100);
+}
+
 .bubble{
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     background-color: rgb(150, 201, 150);
     border-radius: 50%;
     color: #fff;
