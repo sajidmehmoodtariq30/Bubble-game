@@ -57,10 +57,11 @@ main{
 #bottom{
     width: 100%;
     height: calc(100% - 100px);
-    padding: 2%;
+    padding: 25px 40px;
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 20px;
+    overflow: hidden;
 }
 
 .bubble{
