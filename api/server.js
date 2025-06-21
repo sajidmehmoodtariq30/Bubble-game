@@ -51,33 +51,55 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
   'http://127.0.0.1:5173',
-  // Add your production Vercel URLs here
+  // Production Vercel URLs
+  'https://bubble-game-sage-seven.vercel.app',
+  'https://bubble-game-ppwp.vercel.app',
+  // Allow all Vercel preview deployments
+  /^https:\/\/bubble-game-.*\.vercel\.app$/,
   /^https:\/\/.*\.vercel\.app$/
 ];
 
+console.log('CORS Configuration:', {
+  clientUrl: process.env.CLIENT_URL,
+  nodeEnv: process.env.NODE_ENV,
+  allowedOrigins: allowedOrigins.filter(origin => typeof origin === 'string')
+});
+
 app.use(cors({
   origin: function (origin, callback) {
+    console.log(`CORS request from origin: ${origin}`);
+    
     // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
+    if (!origin) {
+      console.log('Allowing request with no origin');
+      return callback(null, true);
+    }
     
     // Check if the origin is in the allowed list or matches the regex pattern
     const isAllowed = allowedOrigins.some(allowedOrigin => {
       if (allowedOrigin instanceof RegExp) {
-        return allowedOrigin.test(origin);
+        const matches = allowedOrigin.test(origin);
+        console.log(`Testing regex ${allowedOrigin} against ${origin}: ${matches}`);
+        return matches;
       }
-      return allowedOrigin === origin;
+      const matches = allowedOrigin === origin;
+      console.log(`Testing string ${allowedOrigin} against ${origin}: ${matches}`);
+      return matches;
     });
     
     if (isAllowed) {
+      console.log(`CORS allowing origin: ${origin}`);
       callback(null, true);
     } else {
       console.warn(`CORS blocked request from origin: ${origin}`);
+      console.warn('Allowed origins:', allowedOrigins);
       callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'x-requested-with'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-requested-with', 'X-Requested-With'],
+  preflightContinue: false,
   optionsSuccessStatus: 200 // For legacy browser support
 }));
 
@@ -88,6 +110,12 @@ app.use(cookieParser());
 
 // Compression middleware
 app.use(compression());
+
+// Explicitly handle preflight OPTIONS requests
+app.options('*', (req, res) => {
+  console.log(`OPTIONS request from origin: ${req.headers.origin}`);
+  res.status(200).end();
+});
 
 // Health check route
 app.get('/health', (req, res) => {
